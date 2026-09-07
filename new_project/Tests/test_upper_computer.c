@@ -24,6 +24,59 @@ uint32_t test_tim1_instance;
 uint32_t test_tim2_instance;
 UART_HandleTypeDef huart2 = {0};
 static uint8_t *armed_byte;
+static uint8_t gear_call_count;
+static uint8_t rail_call_count;
+static uint8_t gear_move_mm;
+static uint8_t gear_addr;
+static uint8_t gear_dir;
+static uint16_t gear_vel;
+static uint8_t gear_acc;
+static uint8_t gear_raF;
+static uint8_t gear_snF;
+static uint8_t rail_move_mm;
+static uint8_t rail_addr;
+static uint8_t rail_dir;
+static uint16_t rail_vel;
+static uint8_t rail_acc;
+static uint8_t rail_raF;
+static uint8_t rail_snF;
+static uint8_t delay_one_ms_count;
+
+void Gear_StepMotor_ControlByMM(uint8_t move_mm, uint8_t addr, uint8_t dir,
+                                uint16_t vel, uint8_t acc, uint8_t raF,
+                                uint8_t snF)
+{
+    gear_call_count++;
+    gear_move_mm = move_mm;
+    gear_addr = addr;
+    gear_dir = dir;
+    gear_vel = vel;
+    gear_acc = acc;
+    gear_raF = raF;
+    gear_snF = snF;
+}
+
+void Rail_StepMotor_ControlByMM(uint8_t move_mm, uint8_t addr, uint8_t dir,
+                                uint16_t vel, uint8_t acc, uint8_t raF,
+                                uint8_t snF)
+{
+    rail_call_count++;
+    rail_move_mm = move_mm;
+    rail_addr = addr;
+    rail_dir = dir;
+    rail_vel = vel;
+    rail_acc = acc;
+    rail_raF = raF;
+    rail_snF = snF;
+}
+
+void HAL_Delay(uint32_t delay_ms)
+{
+    if (delay_ms == 1U)
+    {
+        delay_one_ms_count++;
+    }
+}
 
 void HAL_GPIO_Init(GPIO_TypeDef *port, GPIO_InitTypeDef *init)
 {
@@ -110,6 +163,37 @@ int main(void)
     if ((motor_vx != 11U) || (motor_vy != 22U) || (target_yaw != 33.0f))
     {
         fputs("FAIL: original chassis command assignment changed\n", stderr);
+        return 1;
+    }
+
+    if ((gear_call_count != 1U) || (gear_move_mm != 66U) ||
+        (gear_addr != 2U) || (gear_dir != 0U) || (gear_vel != 10U) ||
+        (gear_acc != 5U) || (gear_raF != 1U) || (gear_snF != 0U))
+    {
+        fputs("FAIL: horizontal command no longer matches original CAN data\n",
+              stderr);
+        return 1;
+    }
+    if ((rail_call_count != 1U) || (rail_move_mm != 55U) ||
+        (rail_addr != 1U) || (rail_dir != 1U) || (rail_vel != 100U) ||
+        (rail_acc != 5U) || (rail_raF != 1U) || (rail_snF != 0U))
+    {
+        fputs("FAIL: lift command no longer matches original CAN data\n",
+              stderr);
+        return 1;
+    }
+    if (delay_one_ms_count != 1U)
+    {
+        fputs("FAIL: original 1 ms separation between axes was removed\n",
+              stderr);
+        return 1;
+    }
+
+    UART_Launch();
+    if ((gear_call_count != 1U) || (rail_call_count != 1U))
+    {
+        fputs("FAIL: unchanged packet must not resend position commands\n",
+              stderr);
         return 1;
     }
 

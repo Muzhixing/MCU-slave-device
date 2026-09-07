@@ -426,9 +426,9 @@
               <FilePath>.\Drivers\STM32F1xx_HAL_Driver\Src\stm32f1xx_hal_gpio.c</FilePath>
             </File>
             <File>
-              <FileName>stm32f1xx_hal_i2c.c</FileName>
+              <FileName>stm32f1xx_hal_can.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\Drivers\STM32F1xx_HAL_Driver\Src\stm32f1xx_hal_i2c.c</FilePath>
+              <FilePath>.\Drivers\STM32F1xx_HAL_Driver\Src\stm32f1xx_hal_can.c</FilePath>
             </File>
             <File>
               <FileName>stm32f1xx_hal_rcc.c</FileName>
@@ -439,16 +439,6 @@
               <FileName>stm32f1xx_hal_rcc_ex.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\Drivers\STM32F1xx_HAL_Driver\Src\stm32f1xx_hal_rcc_ex.c</FilePath>
-            </File>
-            <File>
-              <FileName>stm32f1xx_hal_tim.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\Drivers\STM32F1xx_HAL_Driver\Src\stm32f1xx_hal_tim.c</FilePath>
-            </File>
-            <File>
-              <FileName>stm32f1xx_hal_tim_ex.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\Drivers\STM32F1xx_HAL_Driver\Src\stm32f1xx_hal_tim_ex.c</FilePath>
             </File>
             <File>
               <FileName>stm32f1xx_hal_uart.c</FileName>
@@ -496,46 +486,6 @@
               <FilePath>.\Hardware\UART.h</FilePath>
             </File>
             <File>
-              <FileName>Motor.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\Hardware\Motor.c</FilePath>
-            </File>
-            <File>
-              <FileName>Motor.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\Hardware\Motor.h</FilePath>
-            </File>
-            <File>
-              <FileName>I2C.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\Hardware\I2C.c</FilePath>
-            </File>
-            <File>
-              <FileName>I2C.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\Hardware\I2C.h</FilePath>
-            </File>
-            <File>
-              <FileName>WT101.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\Hardware\WT101.c</FilePath>
-            </File>
-            <File>
-              <FileName>WT101.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\Hardware\WT101.h</FilePath>
-            </File>
-            <File>
-              <FileName>Mulun.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\Hardware\Mulun.c</FilePath>
-            </File>
-            <File>
-              <FileName>Mulun.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\Hardware\Mulun.h</FilePath>
-            </File>
-            <File>
               <FileName>UpperComputer.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\Hardware\UpperComputer.c</FilePath>
@@ -545,20 +495,45 @@
               <FileType>5</FileType>
               <FilePath>.\Hardware\UpperComputer.h</FilePath>
             </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>App</GroupName>
-          <Files>
             <File>
-              <FileName>App_Test.c</FileName>
+              <FileName>can.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\App\App_Test.c</FilePath>
+              <FilePath>.\Hardware\can.c</FilePath>
             </File>
             <File>
-              <FileName>App_Test.h</FileName>
+              <FileName>can.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\App\App_Test.h</FilePath>
+              <FilePath>.\Hardware\can.h</FilePath>
+            </File>
+            <File>
+              <FileName>hcan.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Hardware\hcan.c</FilePath>
+            </File>
+            <File>
+              <FileName>hcan.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Hardware\hcan.h</FilePath>
+            </File>
+            <File>
+              <FileName>Emm_V5.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Hardware\Emm_V5.c</FilePath>
+            </File>
+            <File>
+              <FileName>Emm_V5.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Hardware\Emm_V5.h</FilePath>
+            </File>
+            <File>
+              <FileName>tower.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Hardware\tower.c</FilePath>
+            </File>
+            <File>
+              <FileName>tower.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Hardware\tower.h</FilePath>
             </File>
           </Files>
         </Group>

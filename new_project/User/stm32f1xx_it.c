@@ -23,6 +23,8 @@
 
 #include "stm32f1xx_it.h"
 #include "UART.h"
+#include "can.h"
+#include "hcan.h"
 
 void NMI_Handler(void)
 {
@@ -76,4 +78,14 @@ void SysTick_Handler(void)
 void USART2_IRQHandler(void)
 {
     HAL_UART_IRQHandler(&huart2);
+}
+
+void USB_LP_CAN1_RX0_IRQHandler(void)
+{
+    HAL_CAN_IRQHandler(&hcan);
+}
+
+void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *canHandle)
+{
+    CAN_Rx_Callback(canHandle);
 }

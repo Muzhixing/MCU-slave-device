@@ -13,6 +13,7 @@
 #include "UpperComputer.h"
 
 #include "UART.h"
+#include "tower.h"
 
 uint8_t rx_data;
 uint8_t rx_buffer[UART_RX_BUFFER_SIZE];
@@ -24,6 +25,7 @@ uint16_t motor_vy = 0U;
 float target_yaw = 0.0f;
 
 static UART_Packet_t rx_packet;
+static UART_Packet_t last_packet;
 
 static uint8_t UART_Validate_Packet(const uint8_t *buffer, uint8_t length)
 {
@@ -117,6 +119,22 @@ void UART_Launch(void)
     motor_vx = rx_packet.forward_speed;
     motor_vy = rx_packet.horizontal_speed;
     target_yaw = rx_packet.target_angle;
+
+    if (rx_packet.horizontal_rod != last_packet.horizontal_rod)
+    {
+        Gear_StepMotor_ControlByMM(rx_packet.horizontal_rod, 2U, 0U,
+                                   10U, 5U, true, false);
+        last_packet.horizontal_rod = rx_packet.horizontal_rod;
+    }
+
+    HAL_Delay(1U);
+
+    if (rx_packet.lift_rod != last_packet.lift_rod)
+    {
+        Rail_StepMotor_ControlByMM(rx_packet.lift_rod, 1U, 1U,
+                                   100U, 5U, true, false);
+        last_packet.lift_rod = rx_packet.lift_rod;
+    }
 }
 
 const UART_Packet_t *UART_GetLatestPacket(void)

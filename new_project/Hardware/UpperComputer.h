@@ -5,7 +5,8 @@
  * @pin_resources PA2=USART2_TX and PA3=USART2_RX through UART.c.
  * @peripherals USART2 receive interrupt.
  * @function Receives, validates and exposes the original ten-byte packet.
- * @purpose Supplies vx, vy and target yaw without altering any packet field.
+ * @purpose Supplies chassis values and the original CAN stepper commands
+ *          without altering any packet field or motion parameter.
  * @migration Layout, constants, globals and receive flow match usart_parse.h.
  ******************************************************************************
  */
