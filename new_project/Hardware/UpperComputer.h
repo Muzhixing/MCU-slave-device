@@ -4,9 +4,9 @@
  * @brief   Original fixed-length upper-computer UART protocol
  * @pin_resources PA2=USART2_TX and PA3=USART2_RX through UART.c.
  * @peripherals USART2 receive interrupt.
- * @function Receives, validates and exposes the original ten-byte packet.
- * @purpose Supplies chassis values and the original CAN stepper commands
- *          without altering any packet field or motion parameter.
+ * @function Receives both the original ten-byte packet and Jiangxie
+ *           [j,LX,LY,RX,RY] Bluetooth joystick packets.
+ * @purpose Supplies the original commands and safe two-axis stepper tests.
  * @migration Layout, constants, globals and receive flow match usart_parse.h.
  ******************************************************************************
  */
@@ -34,7 +34,7 @@ typedef struct
 #define UART_PACKET_LENGTH  10U
 #define UART_PACKET_HEADER  0xB3U
 #define UART_PACKET_FOOTER  0xB4U
-#define UART_RX_BUFFER_SIZE 10U
+#define UART_RX_BUFFER_SIZE 64U
 
 extern uint8_t rx_data;
 extern uint8_t rx_buffer[UART_RX_BUFFER_SIZE];

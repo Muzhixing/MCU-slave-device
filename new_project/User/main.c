@@ -1,7 +1,7 @@
 /**
  ******************************************************************************
  * @file    main.c
- * @brief   STM32F103C8 lead-screw safe movement test
+ * @brief   STM32F103C8 Bluetooth dual-stepper CAN test
  *
  * @pin_resources
  *   - PA11: CAN1_RX from an external CAN transceiver RXD.
@@ -15,12 +15,14 @@
  *
  * @function
  *   - Starts USART2 at 115200 baud and CAN1 at the original 500 kbit/s.
- *   - Enables only the lead screw at the original CAN address 1.
- *   - Lead screw: forward 5 mm, dir=1, vel=30 RPM, acc=5.
+ *   - Homes the steel-wire motor at CAN address 1 after MCU power-up.
+ *   - Receives Bluetooth joystick and original B3/B4 packets on USART2.
+ *   - Left joystick Y controls steel wire; right joystick Y controls crossbar.
  *
  * @purpose
- *   - Safely verifies the reset lead-screw driver before restoring the
- *     original 50 mm / 100 RPM command.
+ *   - No Bluetooth motion command is accepted during the homing timeout.
+ *   - Holding a joystick repeats relative moves after each motion interval.
+ *   - Returning the joystick to centre stops issuing additional moves.
  ******************************************************************************
  */
 
@@ -29,7 +31,7 @@
 #include "can.h"
 #include "hcan.h"
 #include "Emm_V5.h"
-#include "tower.h"
+#include "UpperComputer.h"
 
 static void SystemClock_Config(void);
 static void UART_SendHex8(uint8_t value);
@@ -46,23 +48,49 @@ int main(void)
     UART_Init(115200U);
     MX_CAN_Init();
     CAN_Start(CAN_NUM);
-    UART_SendString("LEAD SCREW SAFE TEST READY BAUD=500000 ADDR=1\r\n");
+    UART_SendString("BLUETOOTH DUAL STEPPER TEST BAUD=500000 ADDR1=STEEL ADDR2=CROSSBAR\r\n");
     CAN_PrintStatus("CAN START");
 
     can_rx_received = 0U;
+    UART_SendString("WAIT DRIVER POWER-UP 1000MS\r\n");
+    HAL_Delay(1000U);
+
+    UART_SendString("SET HOMING MODE=2 DIR=0 VEL=30 TIMEOUT=20000 SL_RPM=30 SL_MA=800 SL_MS=60 POT=0\r\n");
+    Emm_V5_Origin_Modify_Params(1U, false, 2U, 0U, 30U, 20000U,
+                                30U, 800U, 60U, false);
+    HAL_Delay(100U);
+    CAN_PrintStatus("CAN HOME PARAM");
+
     UART_SendString("ENABLE LEAD_SCREW=1\r\n");
     Emm_V5_En_Control(1U, true, false);
     HAL_Delay(100U);
     CAN_PrintStatus("CAN ENABLE");
 
-    UART_SendString("MOVE LEAD_SCREW1=FORWARD5MM/DIR1/VEL30/ACC5\r\n");
-    Rail_StepMotor_ControlByMM(5U, 1U, 1U, 30U, 5U, true, false);
+    UART_SendString("TRIGGER SENSORLESS HOMING MODE=2\r\n");
+    Emm_V5_Origin_Trigger_Return(1U, 2U, false);
     HAL_Delay(200U);
-    CAN_PrintStatus("CAN MOVE");
+    CAN_PrintStatus("CAN HOME TRIGGER");
     CAN_PrintReceivedFrame();
+
+    UART_SendString("WAIT HOMING WINDOW 20000MS - CONTROL LOCKED\r\n");
+    HAL_Delay(20000U);
+
+    UART_SendString("ENABLE CROSSBAR=2\r\n");
+    Emm_V5_En_Control(2U, true, false);
+    HAL_Delay(100U);
+    CAN_PrintStatus("CAN CROSSBAR ENABLE");
+
+    UART_Enable_Receive();
+    UART_SendString("CONTROL READY: [j,LX,LY,RX,RY] OR B3...B4\r\n");
 
     while (1)
     {
+        if (rx_complete_flag != 0U)
+        {
+            UART_Disable_Receive();
+            UART_Parse_Data();
+            UART_Launch();
+        }
     }
 }
 

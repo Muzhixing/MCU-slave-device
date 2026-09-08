@@ -16,7 +16,7 @@
  * @param  move_mm: 移动距离（mm，正数=正方向，负数=反方向）
  * @param  vel: 速度分辩率0~255，值越大速度越快
  * @param  acc: 加速度分辩率0~255，值越大加速度越快
- * @param  raF: 相对/绝对位置，true=相对，false=绝对
+ * @param  raF: 相对/绝对位置，false=相对，true=绝对
  * @param  snF: 同步标志，true=等待同步，false=立即执行
  * @retval 无
  */
@@ -38,7 +38,7 @@ void Rail_StepMotor_ControlByMM( uint8_t move_mm,uint8_t addr, uint8_t dir, uint
  * @param  move_mm: 移动距离（mm，正数=正方向，负数=反方向）
  * @param  vel: 速度分辩率0~255，值越大速度越快
  * @param  acc: 加速度分辩率0~255，值越大加速度越快
- * @param  raF: 相对/绝对位置，true=相对，false=绝对
+ * @param  raF: 相对/绝对位置，false=相对，true=绝对
  * @param  snF: 同步标志，true=等待同步，false=立即执行
  * @retval 无
  */
