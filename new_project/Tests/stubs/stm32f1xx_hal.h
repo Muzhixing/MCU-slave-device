@@ -69,6 +69,20 @@ typedef struct
 
 typedef struct
 {
+    unsigned int unused;
+} CAN_HandleTypeDef;
+
+typedef struct
+{
+    uint32_t StdId;
+    uint32_t ExtId;
+    uint32_t IDE;
+    uint32_t RTR;
+    uint32_t DLC;
+} CAN_RxHeaderTypeDef;
+
+typedef struct
+{
     uint32_t Prescaler;
     uint32_t CounterMode;
     uint32_t Period;
