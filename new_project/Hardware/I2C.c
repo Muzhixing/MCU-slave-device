@@ -1,11 +1,11 @@
 /**
  ******************************************************************************
  * @file    I2C.c
- * @brief   I2C1 initialization for WT101 migration test
+ * @brief   I2C1 initialization for the HWT101 sensor bus
  * @pin_resources PB6=SCL, PB7=SDA (open-drain alternate function)
  * @peripherals I2C1
  * @function Initializes a 100 kHz I2C1 bus.
- * @purpose Connects the WT101 sensor without using CAN PB8/PB9.
+ * @purpose Connects HWT101 while leaving USART2 available for Bluetooth.
  * @migration Source: src/Core/Src/i2c.c; adapted to default PB6/PB7 mapping.
  ******************************************************************************
  */

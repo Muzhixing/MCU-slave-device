@@ -11,7 +11,9 @@ extern "C" {
 #define HAL_DMA_MODULE_ENABLED
 #define HAL_FLASH_MODULE_ENABLED
 #define HAL_GPIO_MODULE_ENABLED
+#define HAL_I2C_MODULE_ENABLED
 #define HAL_RCC_MODULE_ENABLED
+#define HAL_TIM_MODULE_ENABLED
 #define HAL_UART_MODULE_ENABLED
 
 #define HSE_VALUE    ((uint32_t)8000000U)
@@ -30,8 +32,10 @@ extern "C" {
 #include "stm32f1xx_hal_can.h"
 #include "stm32f1xx_hal_dma.h"
 #include "stm32f1xx_hal_gpio.h"
+#include "stm32f1xx_hal_i2c.h"
 #include "stm32f1xx_hal_cortex.h"
 #include "stm32f1xx_hal_flash.h"
+#include "stm32f1xx_hal_tim.h"
 #include "stm32f1xx_hal_uart.h"
 
 #ifdef  USE_FULL_ASSERT

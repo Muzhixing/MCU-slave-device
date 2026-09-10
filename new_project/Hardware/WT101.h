@@ -1,11 +1,12 @@
-    /**
+/**
  ******************************************************************************
  * @file    WT101.h
- * @brief   HWT101 raw UART-frame interface
- * @pin_resources PB6=USART1_TX, PB7=USART1_RX; @peripherals remapped USART1
- * @function Initializes UART, receives an 11-byte frame and converts 0x53 yaw.
- * @purpose Supplies signed current yaw to the original chassis heading PID.
- * @migration UART replaces the old I2C transport; yaw scale remains raw/32768*180.
+ * @brief   HWT101 I2C yaw interface
+ * @pin_resources PB6=I2C1_SCL, PB7=I2C1_SDA; external 4.7 kOhm pull-ups.
+ * @peripherals I2C1 at 100 kHz.
+ * @function Probes address 0x50 and reads signed yaw from register 0x3F.
+ * @purpose Supplies current yaw without occupying a UART peripheral.
+ * @migration Keeps the original raw/32768*180 yaw conversion.
  ******************************************************************************
  */
 #ifndef WT101_H
@@ -14,17 +15,12 @@
 #include "stm32f1xx_hal.h"
 #include <stdint.h>
 
-#define WT101_UART_FRAME_SIZE 11U
-#define WT101_UART_BAUD_RATE  115200U
+#define WT101_I2C_ADDRESS            0x50U
+#define WT101_YAW_REGISTER           0x3FU
+#define WT101_I2C_DEFAULT_TIMEOUT_MS 10U
 
-extern UART_HandleTypeDef huart1;
-
-void WT101_UART_Init(uint32_t baud_rate);
-HAL_StatusTypeDef WT101_UART_ReadFrame(uint8_t frame[WT101_UART_FRAME_SIZE],
-                                      uint32_t timeout_ms);
-uint8_t WT101_UART_ChecksumOK(const uint8_t frame[WT101_UART_FRAME_SIZE]);
-uint8_t WT101_UART_ParseYaw(const uint8_t frame[WT101_UART_FRAME_SIZE],
-                           float *yaw_angle);
-HAL_StatusTypeDef WT101_UART_ReadYaw(float *yaw_angle, uint32_t timeout_ms);
+void WT101_Init(void);
+HAL_StatusTypeDef WT101_IsReady(uint32_t timeout_ms);
+HAL_StatusTypeDef WT101_ReadYaw(float *yaw_angle, uint32_t timeout_ms);
 
 #endif

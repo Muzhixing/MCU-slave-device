@@ -511,6 +511,16 @@
               <FilePath>.\Hardware\Motor.h</FilePath>
             </File>
             <File>
+              <FileName>Servo.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Hardware\Servo.c</FilePath>
+            </File>
+            <File>
+              <FileName>Servo.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Hardware\Servo.h</FilePath>
+            </File>
+            <File>
               <FileName>I2C.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\Hardware\I2C.c</FilePath>
@@ -596,24 +606,14 @@
           <GroupName>App</GroupName>
           <Files>
             <File>
-              <FileName>App_Test.c</FileName>
+              <FileName>State_Machine.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\App\App_Test.c</FilePath>
+              <FilePath>.\App\State_Machine.c</FilePath>
             </File>
             <File>
-              <FileName>App_Test.h</FileName>
+              <FileName>State_Machine.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\App\App_Test.h</FilePath>
-            </File>
-            <File>
-              <FileName>buleteethtest.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\App\buleteethtest.c</FilePath>
-            </File>
-            <File>
-              <FileName>buleteethtest.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\App\buleteethtest.h</FilePath>
+              <FilePath>.\App\State_Machine.h</FilePath>
             </File>
           </Files>
         </Group>

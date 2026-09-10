@@ -21,12 +21,18 @@
 
 ### 暂不启用的模块
 
-- 舵机。
 - 超声波液位检测。
 - 水泵。
 - 牛奶监测及投喂安全联锁。
 
 这些模块的数据字段仍被解析和保存，但不初始化相关外设、不产生硬件动作。状态机保留命名明确的空接口，方便后续逐模块测试后接入。
+
+### 新增实物验证结果（2026-09-10）
+
+- 横向舵机已经完成实物测试，使用 PA7/TIM3_CH2、50 Hz、500~2500 us。
+- 正式程序启用横向舵机，固定包中的 `rudder_angle` 直接作为 0~180°目标角度。
+- PA6/TIM3_CH1 仅预留给第二路舵机，正式状态机不下发动作。
+- 第四路底盘 PWM 已由 PB1 调整为 PA9/TIM1_CH2，并完成编译与独立电机测试程序验证。
 
 ### 不进入正式程序的模块
 
@@ -49,7 +55,7 @@ B3 VX VY YAW SERVO LIFT CROSSBAR SW1 SW2 B4
 | 1 | `forward_speed` | 更新底盘 `motor_vx` |
 | 2 | `horizontal_speed` | 更新底盘 `motor_vy` |
 | 3 | `target_angle` | 更新绝对目标航向 `target_yaw` |
-| 4 | `rudder_angle` | 保存，暂不执行 |
+| 4 | `rudder_angle` | 控制 PA7/TIM3_CH2 横向舵机，范围限制为 0~180° |
 | 5 | `lift_rod` | 字段变化时控制地址 1 钢丝电机 |
 | 6 | `horizontal_rod` | 字段变化时控制地址 2 横杆电机 |
 | 7 | `switch_one` | 保存，暂不执行 |
@@ -105,7 +111,7 @@ I2C 读取使用有限超时，禁止沿用原工程的 `HAL_MAX_DELAY`。读取
 3. 更新 `motor_vx`、`motor_vy` 和 `target_yaw`。
 4. 仅当 `lift_rod` 与上一条已执行命令不同时，下发地址 1 钢丝命令。
 5. 仅当 `horizontal_rod` 与上一条已执行命令不同时，下发地址 2 横杆命令。
-6. 保存舵机和开关字段，但调用空的预留接口。
+6. 将 `rudder_angle` 下发到横向舵机；保存两个开关字段但不产生硬件动作。
 7. 返回空闲状态并重新接收下一包。
 
 ## 航向控制
@@ -148,7 +154,7 @@ PID 参数保持：`Kp=12`、`Ki=2`、`Kd=2`、积分上限 35、输出上限 35
 ### 精简和修改
 
 - `new_project/User/main.c`：删除模式选择，只调用正式状态机。
-- `new_project/Hardware/UpperComputer.c/.h`：只保留固定 10 字节协议和正式命令执行。
+- `new_project/Hardware/UpperComputer.c/.h`：只保留固定 10 字节协议、正式命令执行和横向舵机字段下发。
 - `new_project/Hardware/UART.c/.h`：保留 HC-08 中断接收和必要发送接口。
 - `new_project/Hardware/WT101.c/.h`：改为 I2C 寄存器读取，保留原地址、字节顺序和角度换算。
 - `new_project/Hardware/Motor.c/.h`：保留实物接线、四轮驱动、麦轮分解和航向 PID 接口。
@@ -182,7 +188,9 @@ PID 参数保持：`Kp=12`、`Ki=2`、`Kd=2`、积分上限 35、输出上限 35
 | LF PWM/方向 | PA0；PB5、PB12 |
 | LB PWM/方向 | PA1；PB13、PB14 |
 | RF PWM/方向 | PA8；PB15、PA4 |
-| RB PWM/方向 | PB1；PB3、PB4 |
+| RB PWM/方向 | PA9；PB3、PB4 |
+| 横向舵机 | PA7 / TIM3_CH2 |
+| 第二路舵机预留 | PA6 / TIM3_CH1，不下发动作 |
 
 ## 安全行为
 

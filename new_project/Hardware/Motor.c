@@ -7,11 +7,11 @@
  *   - LF: PA0 TIM2_CH1 PWM; PB5=direction high side, PB12=direction low side.
  *   - LB: PA1 TIM2_CH2 PWM; PB13/PB14 direction.
  *   - RF: PA8 TIM1_CH1 PWM; PB15/PA4 direction.
- *   - RB: PA11 TIM1_CH4 PWM; PB3/PB4 direction.
+ *   - RB: PA9 TIM1_CH2 PWM; PB3/PB4 direction.
  *   - PB3/PB4 require JTAG disabled while SWD remains enabled.
  *
  * @peripherals
- *   - TIM1 CH1/CH4, TIM2 CH1/CH2, GPIOA, GPIOB and AFIO.
+ *   - TIM1 CH1/CH2, TIM2 CH1/CH2, GPIOA, GPIOB and AFIO.
  *
  * @function
  *   - Produces four 0..999 PWM values, signed direction control and original
@@ -54,6 +54,7 @@
 #define RB_DIR_LOW_PIN   GPIO_PIN_4
 
 static PID_Mulun_HandleTypeDef mulun_pid;
+static float motor_last_heading_correction;
 
 TIM_HandleTypeDef htim1;
 TIM_HandleTypeDef htim2;
@@ -87,7 +88,10 @@ static void Motor_SetDirection(GPIO_TypeDef *high_port, uint16_t high_pin,
     }
 }
 
-static void Motor_ConfigTimer(TIM_HandleTypeDef *htim, void *instance)
+static void Motor_ConfigTimer(TIM_HandleTypeDef *htim, void *instance,
+                              uint32_t first_channel,
+                              uint32_t second_channel,
+                              uint8_t channel_count)
 {
     TIM_MasterConfigTypeDef master = {0};
     TIM_OC_InitTypeDef channel = {0};
@@ -119,12 +123,12 @@ static void Motor_ConfigTimer(TIM_HandleTypeDef *htim, void *instance)
     channel.OCIdleState = TIM_OCIDLESTATE_RESET;
     channel.OCNIdleState = TIM_OCNIDLESTATE_RESET;
 
-    if (HAL_TIM_PWM_ConfigChannel(htim, &channel, TIM_CHANNEL_1) != HAL_OK)
+    if (HAL_TIM_PWM_ConfigChannel(htim, &channel, first_channel) != HAL_OK)
     {
         Motor_FailStop();
     }
-    if (HAL_TIM_PWM_ConfigChannel(htim, &channel,
-                                  (instance == TIM1) ? TIM_CHANNEL_4 : TIM_CHANNEL_2) != HAL_OK)
+    if ((channel_count > 1U) &&
+        (HAL_TIM_PWM_ConfigChannel(htim, &channel, second_channel) != HAL_OK))
     {
         Motor_FailStop();
     }
@@ -155,18 +159,19 @@ static void Motor_ConfigGpio(void)
     HAL_GPIO_Init(GPIOB, &gpio);
 
     gpio.Mode = GPIO_MODE_AF_PP;
-    gpio.Pin = GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_8 | GPIO_PIN_11;
+    gpio.Pin = GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_8 | GPIO_PIN_9;
     HAL_GPIO_Init(GPIOA, &gpio);
 }
 
 void Motor_Init(void)
 {
     PID_Mulun_Init(&mulun_pid);
+    motor_last_heading_correction = 0.0f;
     Motor_ConfigGpio();
     __HAL_RCC_TIM1_CLK_ENABLE();
     __HAL_RCC_TIM2_CLK_ENABLE();
-    Motor_ConfigTimer(&htim1, TIM1);
-    Motor_ConfigTimer(&htim2, TIM2);
+    Motor_ConfigTimer(&htim1, TIM1, TIM_CHANNEL_1, TIM_CHANNEL_2, 2U);
+    Motor_ConfigTimer(&htim2, TIM2, TIM_CHANNEL_1, TIM_CHANNEL_2, 2U);
     motor_PWM_Init();
     motor_stop_all();
 }
@@ -176,7 +181,7 @@ void motor_PWM_Init(void)
     if ((HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_1) != HAL_OK) ||
         (HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_2) != HAL_OK) ||
         (HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1) != HAL_OK) ||
-        (HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_4) != HAL_OK))
+        (HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_2) != HAL_OK))
     {
         Motor_FailStop();
     }
@@ -187,7 +192,7 @@ void motor_stop_all(void)
     __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_1, 0U);
     __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_2, 0U);
     __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, 0U);
-    __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_4, 0U);
+    __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_2, 0U);
 }
 
 void Motor_LF_SetSpeed(int32_t speed)
@@ -215,7 +220,7 @@ void Motor_RB_SetSpeed(int32_t speed)
 {
     Motor_SetDirection(RB_DIR_HIGH_PORT, RB_DIR_HIGH_PIN,
                        RB_DIR_LOW_PORT, RB_DIR_LOW_PIN, speed);
-    __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_4, Motor_ClampPwm(speed));
+    __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_2, Motor_ClampPwm(speed));
 }
 
 void motor_all_set(int32_t speed)
@@ -281,5 +286,27 @@ void mecanum_with_heading_control(uint16_t vx, uint16_t vy,
                                   float requested_yaw, float current_yaw)
 {
     float pid_data = PID_Mulun_Calc(&mulun_pid, requested_yaw, current_yaw);
+    motor_last_heading_correction = pid_data;
     mecanum_move(vx, vy, pid_data);
+}
+
+void mecanum_with_heading_control_limited(int32_t vx, int32_t vy,
+                                          float requested_yaw,
+                                          float current_yaw,
+                                          int32_t pwm_limit)
+{
+    float pid_data = PID_Mulun_Calc(&mulun_pid, requested_yaw, current_yaw);
+    motor_last_heading_correction = pid_data;
+    mecanum_move_limited(vx, vy, pid_data, pwm_limit);
+}
+
+void Motor_ResetHeadingControl(void)
+{
+    PID_Mulun_Init(&mulun_pid);
+    motor_last_heading_correction = 0.0f;
+}
+
+float Motor_GetLastHeadingCorrection(void)
+{
+    return motor_last_heading_correction;
 }

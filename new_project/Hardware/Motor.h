@@ -7,7 +7,7 @@
  *   - LF: PA0 TIM2_CH1 PWM; PB5/PB12 direction.
  *   - LB: PA1 TIM2_CH2 PWM; PB13/PB14 direction.
  *   - RF: PA8 TIM1_CH1 PWM; PB15/PA4 direction.
- *   - RB: PA11 TIM1_CH4 PWM; PB3/PB4 direction.
+ *   - RB: PA9 TIM1_CH2 PWM; PB3/PB4 direction.
  *
  * @peripherals
  *   - TIM1, TIM2, GPIOA, GPIOB and AFIO.
@@ -48,5 +48,11 @@ void mecanum_move_limited(int32_t vx, int32_t vy, float omega,
                           int32_t pwm_limit);
 void mecanum_with_heading_control(uint16_t vx, uint16_t vy,
                                   float target_yaw, float current_yaw);
+void mecanum_with_heading_control_limited(int32_t vx, int32_t vy,
+                                          float target_yaw,
+                                          float current_yaw,
+                                          int32_t pwm_limit);
+void Motor_ResetHeadingControl(void);
+float Motor_GetLastHeadingCorrection(void);
 
 #endif

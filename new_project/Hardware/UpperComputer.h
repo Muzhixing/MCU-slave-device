@@ -1,12 +1,11 @@
 /**
  ******************************************************************************
  * @file    UpperComputer.h
- * @brief   Original fixed-length upper-computer UART protocol
+ * @brief   Formal original fixed-length upper-computer UART protocol
  * @pin_resources PA2=USART2_TX and PA3=USART2_RX through UART.c.
  * @peripherals USART2 receive interrupt.
- * @function Receives both the original ten-byte packet and Jiangxie
- *           [j,LX,LY,RX,RY] Bluetooth joystick packets.
- * @purpose Supplies the original commands and safe two-axis stepper tests.
+ * @function Receives only the original B3...B4 ten-byte binary packet.
+ * @purpose Supplies formal chassis, servo and two-axis stepper commands.
  * @migration Layout, constants, globals and receive flow match usart_parse.h.
  ******************************************************************************
  */

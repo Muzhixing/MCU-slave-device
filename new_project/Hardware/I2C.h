@@ -1,10 +1,10 @@
 /**
  ******************************************************************************
  * @file    I2C.h
- * @brief   I2C1 interface for WT101 migration test
+ * @brief   I2C1 interface for the HWT101 sensor bus
  * @pin_resources PB6=SCL, PB7=SDA; @peripherals I2C1
- * @function Exposes MX_I2C1_Init and hi2c1.
- * @purpose Provides the WT101 sensor bus.
+ * @function Exposes the 100 kHz I2C1 initialization and handle.
+ * @purpose Provides the production HWT101 register transport.
  * @migration Source: src/Core/Inc/i2c.h; adapted from PB8/PB9 to PB6/PB7.
  ******************************************************************************
  */
