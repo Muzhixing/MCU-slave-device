@@ -1,3 +1,10 @@
-build
-mx.scratch
-!.settings
+# Keil build products and IDE runtime logs
+new_project/Objects/
+new_project/Listings/
+new_project/.vscode/*.log
+new_project/.vscode/*.log.lock
+new_project/*.log
+
+# Host-side test binaries and temporary files
+new_project/Tests/*.exe
+tmp/
