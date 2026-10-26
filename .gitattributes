@@ -1,0 +1,4 @@
+# Preserve original vendor and manufacturing assets byte-for-byte.
+new_project_f407/F407_HAL_Template/Drivers/** -text
+new_project_f407/F407_HAL_Template/docs/hardware/** -text
+*.hex -text
