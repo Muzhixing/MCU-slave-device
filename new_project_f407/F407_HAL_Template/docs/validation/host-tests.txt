@@ -1,0 +1,1 @@
+PASS packet framing/encoding/resync, independent origins, repeated targets, axis/chassis sequencing, yaw hold/correction, reverse brake, disable, sensor/comms/motor faults, telemetry checksum
