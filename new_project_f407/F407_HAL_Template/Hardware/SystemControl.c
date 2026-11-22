@@ -2,6 +2,7 @@
 #include "MotorControl.h"
 #include "StepperPulse.h"
 #include "AxisControl.h"
+#include "AxisFeedback.h"
 #include "Servo.h"
 #include "HWT101.h"
 #include "ultrasound.h"
@@ -13,6 +14,7 @@ static UpperCommand goal;
 static uint8_t enabled,zeros,previous_flags,fault,state,referenced,stable,holding;
 static uint32_t stable_since,stable_sequence,brake_since,control_tick,coast_since;
 static uint8_t braking,coasting;
+static uint32_t zero_epoch[2];
 static int8_t wheel_sign[4];
 static float reference,stable_yaw;
 static HWT101_Data sensor;
@@ -27,6 +29,21 @@ static void Stop(void){
  enabled=0;StepperPulse_StopAll();MotorControl_Stop();Servo_Hold();Pump_Off();
  memset(wheel_sign,0,sizeof(wheel_sign));braking=0;holding=0;
  coasting=1;coast_since=HAL_GetTick();state=fault?4:0;
+}
+static void OriginsUpdate(uint32_t now){
+ unsigned a;uint8_t lost=0;
+ AxisFeedback_Update(now);
+ for(a=0;a<2;a++)if(!AxisFeedback_Verified(a,now) || zero_epoch[a]!=AxisFeedback_Epoch(a)){
+  if(zeros&(1U<<a))lost=1;
+  zeros&=(uint8_t)~(1U<<a);
+ }
+ if(lost && enabled){fault=5;Stop();}
+ if(!enabled && !StepperPulse_Busy())for(a=0;a<2;a++){
+  if(!(zeros&(1U<<a)) && AxisFeedback_Verified(a,now) &&
+     zero_epoch[a]!=AxisFeedback_Epoch(a) && StepperPulse_ZeroAxis(a)){
+   zero_epoch[a]=AxisFeedback_Epoch(a);zeros|=(uint8_t)(1U<<a);
+  }
+ }
 }
 static void HeadingLost(void){
  if(heading_phase==HEADING_WAIT_STABLE)return;
@@ -78,6 +95,7 @@ static void HeadingDiagnosticsUpdate(uint32_t now){
 }
 void SystemControl_Init(void){
  memset(&goal,0,sizeof(goal));zeros=previous_flags=fault=referenced=stable=0;
+ memset(zero_epoch,0,sizeof(zero_epoch));
  distance_valid=0;control_tick=HAL_GetTick();Stop();
  heading_phase=HEADING_STARTUP;raw_valid=reference_initialized=0;stable_samples=stable_sample_ms=0;
  recovery_epoch=recovery_sequence=0;memset(&sensor,0,sizeof(sensor));
@@ -88,13 +106,15 @@ void SystemControl_CommsFault(void){fault=1;Stop();}
 uint8_t SystemControl_Apply(const UpperCommand *c){
  uint8_t rising=(uint8_t)(c->flags & ~previous_flags & 6U);
  uint8_t was_enabled=enabled,was_busy=StepperPulse_Busy();
+ OriginsUpdate(HAL_GetTick());
  if(!(c->flags&1U)){
   Stop();
   if(g_motor_control.fault){fault=2;state=4;return 4;}
   fault=0;state=0;
   if(rising && (was_enabled || was_busy))return 5;
-  if(rising&2U){if(!StepperPulse_ZeroAxis(0))return 5;zeros|=1U;}
-  if(rising&4U){if(!StepperPulse_ZeroAxis(1))return 5;zeros|=2U;}
+  /* Legacy origin flags cannot bypass feedback or re-zero a moved axis. */
+  if((rising&2U) && (!(zeros&1U) || StepperPulse_Position(0)!=0))return 7;
+  if((rising&4U) && (!(zeros&2U) || StepperPulse_Position(1)!=0))return 7;
   /* A stop received before recovery completes does not arm future motion. */
   if(c->flags==0 && heading_phase==HEADING_WAIT_ACK && Sensor()){
    heading_phase=HEADING_READY;stable=0;
@@ -121,7 +141,7 @@ void SystemControl_Update(void){
  uint16_t measured;unsigned a;int32_t desired[4],scale=1200;float error,turn;int moving=0,reverse=0;
  Ultrasound_Update();
  if(Ultrasound_TakeMeasurement(&measured,&measured_valid)){distance=measured;distance_valid=measured_valid?1:0;}
- HeadingUpdate(now,valid);HeadingDiagnosticsUpdate(now);
+ OriginsUpdate(now);HeadingUpdate(now,valid);HeadingDiagnosticsUpdate(now);
  if(g_motor_control.fault){fault=2;Stop();return;}
  if(!enabled)return;
  if(!valid){fault=3;Stop();return;}
@@ -167,8 +187,10 @@ void SystemControl_GetHeadingDiagnostics(HeadingDiagnostics *out){
 static void Put16(uint8_t *p,uint16_t v){p[0]=(uint8_t)v;p[1]=(uint8_t)(v>>8);}
 void SystemControl_Status(uint8_t o[20],uint8_t seq,uint8_t result,uint8_t errors){
  unsigned i;float yaw;uint8_t valid=Sensor();
+ OriginsUpdate(HAL_GetTick());
  memset(o,0,20);o[0]=0xB5;o[1]=1;o[2]=seq;o[3]=result;o[4]=state;
- o[5]=(uint8_t)((enabled?1:0)|(zeros<<1)|(valid?8:0)|(distance_valid?16:0)|(referenced?32:0));
+ o[5]=(uint8_t)((enabled?1:0)|(zeros<<1)|(valid?8:0)|(distance_valid?16:0)|(referenced?32:0)|
+       (AxisFeedback_Fresh(0,HAL_GetTick())?64:0)|(AxisFeedback_Fresh(1,HAL_GetTick())?128:0));
  Put16(o+6,AxisControl_PositionTenths(0));Put16(o+8,AxisControl_PositionTenths(1));
  if(valid&&referenced){yaw=Wrap(sensor.continuous_deg-reference);if(yaw<0)yaw+=360;Put16(o+10,(uint16_t)(yaw*10+0.5f));}
  else Put16(o+10,0xFFFF);

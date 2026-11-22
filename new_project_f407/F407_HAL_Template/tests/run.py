@@ -8,7 +8,7 @@ for test in ('test_control.c','test_heading_recovery.c'):
     with tempfile.TemporaryDirectory(prefix='f407-tests-') as temp:
         build=Path(temp)
         for f in (root/'mocks').glob('*.h'): shutil.copy2(f,build/f.name)
-        for name in ('UpperPacket','AxisControl','SystemControl','StepperPulse','HWT101_Parser'):
+        for name in ('UpperPacket','AxisControl','SystemControl','StepperPulse','HWT101_Parser','AxisFeedback'):
             for ext in ('c','h'): shutil.copy2(hardware/(name+'.'+ext),build/(name+'.'+ext))
         shutil.copy2(root/test,build/test)
         exe=build/('test.exe' if os.name=='nt' else 'test')
@@ -27,4 +27,28 @@ with tempfile.TemporaryDirectory(prefix='f407-driver-tests-') as temp:
     flags=['-std=c99','-Wall','-Wextra','-Werror','-I',str(build)]
     if os.environ.get('SANITIZE')=='1':flags+=['-fsanitize=address,undefined','-fno-omit-frame-pointer','-g']
     subprocess.run([compiler,*flags,*map(str,sorted(build.glob('*.c'))),'-lm','-o',str(exe)],check=True)
+    subprocess.run([str(exe)],check=True)
+
+with tempfile.TemporaryDirectory(prefix='f407-origin-tests-') as temp:
+    build=Path(temp)
+    (build/'main.h').write_text('#include <stdint.h>\ntypedef enum {HAL_OK,HAL_ERROR,HAL_BUSY} HAL_StatusTypeDef;\n')
+    for name in ('AxisFeedback.c','AxisFeedback.h','DriverCANDecode.c','DriverCAN.h'):
+        shutil.copy2(hardware/name,build/name)
+    shutil.copy2(root/'test_axis_feedback.c',build/'test_axis_feedback.c')
+    exe=build/'origins'
+    flags=['-std=c99','-Wall','-Wextra','-Werror','-I',str(build)]
+    if os.environ.get('SANITIZE')=='1':flags+=['-fsanitize=address,undefined','-fno-omit-frame-pointer','-g']
+    subprocess.run([compiler,*flags,*map(str,sorted(build.glob('*.c'))),'-o',str(exe)],check=True)
+    subprocess.run([str(exe)],check=True)
+
+with tempfile.TemporaryDirectory(prefix='f407-can-tests-') as temp:
+    build=Path(temp)
+    shutil.copy2(root/'can_mocks/main.h',build/'main.h')
+    for name in ('AxisFeedback.c','AxisFeedback.h','DriverCAN.c','DriverCANDecode.c','DriverCAN.h'):
+        shutil.copy2(hardware/name,build/name)
+    shutil.copy2(root/'test_driver_can.c',build/'test_driver_can.c')
+    exe=build/'can'
+    flags=['-std=c99','-Wall','-Wextra','-Werror','-I',str(build)]
+    if os.environ.get('SANITIZE')=='1':flags+=['-fsanitize=address,undefined','-fno-omit-frame-pointer','-g']
+    subprocess.run([compiler,*flags,*map(str,sorted(build.glob('*.c'))),'-o',str(exe)],check=True)
     subprocess.run([str(exe)],check=True)

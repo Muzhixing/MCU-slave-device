@@ -1,0 +1,12 @@
+[
+  {
+    "path": "Inc/stm32f4xx_hal_can.h",
+    "url": "https://raw.githubusercontent.com/STMicroelectronics/stm32f4xx-hal-driver/v1.8.5/Inc/stm32f4xx_hal_can.h",
+    "sha256": "b9d9e38908bbc1546e241eeacabeb3a72ade26f99ef3d448334c06ec89bae122"
+  },
+  {
+    "path": "Src/stm32f4xx_hal_can.c",
+    "url": "https://raw.githubusercontent.com/STMicroelectronics/stm32f4xx-hal-driver/v1.8.5/Src/stm32f4xx_hal_can.c",
+    "sha256": "67be4e0b3a9dc93552eb0a506991f5b4042b38c125270d9e703133808c2d40d3"
+  }
+]

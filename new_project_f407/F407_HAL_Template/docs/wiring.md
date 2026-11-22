@@ -19,7 +19,7 @@ PWM 10.5kHz（PSC15、ARR999）。A/B电气输出方向已反向，以正目标�
 |---|---|---|
 |HC-08/上位机串口|PC10 USART3_TX→模块RX；PC11 USART3_RX←模块TX；共地|115200、8N1；模块电源按实际模块额定值|
 |HWT101|PA3 USART2_RX←HWT101_TX；共地|115200、8N1；PA2未用于本次通信|
-|180°舵机|PE5信号、板上5V、GND|TIM5中断生成20ms周期，500～2500µs，默认90°；PC8不是当前舵机输出|
+|180°舵机|PE5信号、板上5V、GND|TIM5中断生成20ms周期，500～2500µs，默认75°；PC8不是当前舵机输出|
 |超声波|PB13→Trig，PB14←Echo，电源和GND|TIM12_CH1捕获；约200ms采样；Echo到MCU必须满足3.3V输入要求，现有分压/电平转换需核对|
 |水泵|PE1控制|本版本仅输出低电平关闭；水泵硬件工作未确认|
 |下载器|PA13 SWDIO、PA14 SWCLK、GND、参考3.3V，可接NRST|ST-Link SWD；PA15用于步进，不能启用全JTAG占用|
@@ -40,3 +40,7 @@ lift正方向向下：800脉冲/mm，软件范围0～175mm，最高约4000Hz。s
 TIM7统一125µs脉冲调度，双轴串行运动。TIM5用于舵机、TIM12用于超声；TIM2/3/4/8编码器，TIM1/9电机PWM。超声共享TIM8_BRK_TIM12中断，未启用TIM8刹车功能。
 
 原理图CAN部分不可作为本固件连接依据；当前不初始化CAN。任何CANH/L必须经过收发器，不能直接作为MCU逻辑收发信号。
+
+## CAN origin feedback candidate
+
+CAN1 PA11 RX / PA12 TX require a 3.3 V logic compatible CAN transceiver. Physical wiring is not yet verified. See [wiring and acceptance](startup-feedback-20261122.md). PD0/PD1 are already occupied by motor controls.

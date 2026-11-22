@@ -5,6 +5,7 @@
 #include "SystemControl.h"
 #include "StepperPulse.h"
 #include "AxisControl.h"
+#include "AxisFeedback.h"
 #include "MotorControl.h"
 #include "HWT101.h"
 #include "ultrasound.h"
@@ -12,7 +13,7 @@ GPIO_TypeDef ga,gd,ge;TIM_TypeDef t7;uint32_t tick_ms;
 MotorControlStatus g_motor_control;
 static HWT101_Parser parser;
 static int streaming=1, rotating=0;
-static uint16_t angle_word=8000,servo=900;
+static uint16_t angle_word=8000,servo=750;
 static int32_t wheels[4];
 static unsigned recovery_calls;
 void MotorControl_Stop(void){memset(wheels,0,sizeof(wheels));}
@@ -33,7 +34,7 @@ static void frame(void){unsigned char f[11]={0x55,0x53,0,0,0,0,0,0,0,0,0};
  if(rotating)angle_word+=100;f[6]=(uint8_t)angle_word;f[7]=(uint8_t)(angle_word>>8);
  for(int i=0;i<10;i++)f[10]+=f[i];for(int i=0;i<11;i++)HWT101_ParserFeed(&parser,f[i],tick_ms);
 }
-static void ms(unsigned n){while(n--){tick_ms++;if(streaming && tick_ms%20==0)frame();
+static void ms(unsigned n){while(n--){tick_ms++;if(tick_ms%20==0){AxisFeedback_Receive(0,3,tick_ms);AxisFeedback_Receive(1,3,tick_ms);}if(streaming && tick_ms%20==0)frame();
  for(unsigned i=0;i<8;i++){t7.SR=1;TIM7_IRQHandler();}SystemControl_Update();}}
 static int idle(void){return !wheels[0]&&!wheels[1]&&!wheels[2]&&!wheels[3]&&!StepperPulse_Busy();}
 static void status(uint8_t*out){SystemControl_Status(out,101,0,0);uint8_t sum=0;
@@ -42,11 +43,12 @@ static void preserved(int32_t b,int32_t c){uint8_t s[20];status(s);assert(!(s[5]
  assert(StepperPulse_Position(0)==b&&StepperPulse_Position(1)==c&&idle());}
 static void initialize(void){tick_ms=0;streaming=1;rotating=0;recovery_calls=0;angle_word=8000;
  memset(&g_motor_control,0,sizeof(g_motor_control));assert(StepperPulse_Init()==HAL_OK);
- HWT101_ParserInit(&parser);SystemControl_Init();ms(1100);assert(g_heading_diagnostics.phase==HEADING_READY);
- UpperCommand z={0,0,0,90,0,0,6};assert(SystemControl_Apply(&z)==0);
+ HWT101_ParserInit(&parser);AxisFeedback_Init(tick_ms);SystemControl_Init();
+ AxisFeedback_Receive(0,7,tick_ms);AxisFeedback_Receive(1,7,tick_ms);ms(1100);assert(g_heading_diagnostics.phase==HEADING_READY);
+ UpperCommand z={0,0,0,75,0,0,6};assert(SystemControl_Apply(&z)==0);
 }
 static void recovering_step_fault(void){
- initialize();UpperCommand c={0,0,0,90,2,3,1};assert(SystemControl_Apply(&c)==0);ms(5000);
+ initialize();UpperCommand c={0,0,0,75,2,3,1};assert(SystemControl_Apply(&c)==0);ms(5000);
  int32_t b=StepperPulse_Position(0),s=StepperPulse_Position(1);assert(b==1600&&s==76);
  c.lift=30;assert(SystemControl_Apply(&c)==0);ms(650);assert(StepperPulse_Busy());
  HWT101_ParserBreak(&parser);SystemControl_Update();b=StepperPulse_Position(0);s=StepperPulse_Position(1);

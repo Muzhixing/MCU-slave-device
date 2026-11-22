@@ -1,7 +1,7 @@
 #ifndef SERVO_H
 #define SERVO_H
 #include "main.h"
-#define SERVO_RESET_TENTHS 900U
+#define SERVO_RESET_TENTHS 750U
 HAL_StatusTypeDef Servo_Init(void);
 void Servo_Hold(void);
 void Servo_Disable(void);

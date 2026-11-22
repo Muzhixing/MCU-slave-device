@@ -503,6 +503,11 @@
               <FileType>1</FileType>
               <FilePath>../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c</FilePath>
             </File>
+<File>
+              <FileName>stm32f4xx_hal_can.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_can.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -523,6 +528,9 @@
 <File><FileName>AxisControl.c</FileName><FileType>1</FileType><FilePath>../Hardware/AxisControl.c</FilePath></File>
 <File><FileName>AxisControl.h</FileName><FileType>5</FileType><FilePath>../Hardware/AxisControl.h</FilePath></File>
 <File><FileName>SystemControl.c</FileName><FileType>1</FileType><FilePath>../Hardware/SystemControl.c</FilePath></File>
+<File><FileName>AxisFeedback.c</FileName><FileType>1</FileType><FilePath>../Hardware/AxisFeedback.c</FilePath></File>
+<File><FileName>DriverCAN.c</FileName><FileType>1</FileType><FilePath>../Hardware/DriverCAN.c</FilePath></File>
+<File><FileName>DriverCANDecode.c</FileName><FileType>1</FileType><FilePath>../Hardware/DriverCANDecode.c</FilePath></File>
 <File><FileName>SystemControl.h</FileName><FileType>5</FileType><FilePath>../Hardware/SystemControl.h</FilePath></File>
 <File><FileName>StepperPulse.c</FileName><FileType>1</FileType><FilePath>../Hardware/StepperPulse.c</FilePath></File>
 <File><FileName>StepperPulse.h</FileName><FileType>5</FileType><FilePath>../Hardware/StepperPulse.h</FilePath></File>

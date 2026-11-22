@@ -8,6 +8,7 @@
 #include "StepperPulse.h"
 #include "SystemControl.h"
 #include "Servo.h"
+#include "DriverCAN.h"
 #include "ultrasound.h"
 int main(void) {
  if(HAL_Init()!=HAL_OK)Error_Handler();
@@ -20,8 +21,10 @@ int main(void) {
  if(Bluetooth_Init()!=HAL_OK)Error_Handler();
  if(MotorControl_Init()!=HAL_OK)Error_Handler();
  SystemControl_Init();
+ /* Missing feedback blocks origins; keep UART/heading diagnostics alive. */
+ (void)DriverCAN_Init();
  while(1){
-  HWT101_Poll();Bluetooth_Update();SystemControl_Update();MotorControl_Update();__WFI();
+  HWT101_Poll();DriverCAN_Poll();Bluetooth_Update();SystemControl_Update();MotorControl_Update();__WFI();
  }
 }
 void SystemClock_Config(void)
