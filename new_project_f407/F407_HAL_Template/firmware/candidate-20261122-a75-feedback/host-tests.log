@@ -1,0 +1,10 @@
+PASS driver feedback loss stops active motion; idle/legacy flags cannot restore zero
+PASS packet framing/encoding/resync, independent origins, repeated targets, axis/chassis sequencing, yaw hold/correction, reverse brake, disable, sensor/comms/motor faults, telemetry checksum
+PASS interrupted B/C pulse position and zero flags preserved; 80 old enables rejected; post-recovery stop+enable required
+PASS timeout recovery, moving sensor rejection, repeated fault resets stable window, stale-after-ack interlock, servo hold
+PASS startup receive fault recovery and gyro-only stream cannot recover yaw
+PASS millisecond counter rollover
+PASS original yaw zero preserved, orientation changed during loss, signed-angle wrap, no implicit new zero
+PASS actual USART2 driver: ORE/FE/NE/PE classification, queue overflow, bad checksum, partial-frame gap, age, recovery epoch/sequence guards
+PASS CAN exact address/frame/function/checksum, independent observed home cycles, first-idle rejection, stale/reconnect, failure, MCU reset, timeout, wraparound
+PASS actual CAN transport: PA11/12, bitrate/filter, read-only queries, queue fault discard, bus-off, timeout, init failure

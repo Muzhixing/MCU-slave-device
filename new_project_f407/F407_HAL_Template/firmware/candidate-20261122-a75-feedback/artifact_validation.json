@@ -1,0 +1,18 @@
+{
+  "vectors_checked": 98,
+  "initial_stack": "0x20020000",
+  "flash_base": "0x08000000",
+  "servo_initialized_tenths": 750,
+  "hex_bin_identical": true,
+  "preserved_sources": [
+    "MotorControl.c",
+    "MotorControl.h",
+    "motor.c",
+    "motor.h",
+    "HWT101.c",
+    "HWT101.h",
+    "HWT101_Parser.c",
+    "HWT101_Parser.h"
+  ],
+  "hardware_tested": false
+}
