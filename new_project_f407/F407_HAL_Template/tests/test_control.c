@@ -16,6 +16,9 @@ void Servo_Hold(void){}
 void Servo_SetTenths(uint16_t a){servo=a;}
 uint16_t Servo_CurrentTenths(void){return servo;}
 uint8_t HWT101_Read(HWT101_Data *d){*d=data;d->timestamp_ms=tick_ms;d->sequence=tick_ms;return sensor_valid;}
+uint8_t HWT101_Recover(uint32_t epoch,uint32_t sequence){
+ (void)epoch;(void)sequence;data.continuous_valid=data.rate_valid=1;return sensor_valid;
+}
 void Ultrasound_Update(void){}
 bool Ultrasound_TakeMeasurement(uint16_t *d,bool *v){*d=234;*v=true;return true;}
 void Pump_Off(void){}
@@ -66,7 +69,9 @@ int main(void){
  c.flags=0;assert(SystemControl_Apply(&c)==0);ms(200);assert(StepperPulse_Position(0)==n);
  c.lift=0;c.flags=1;assert(SystemControl_Apply(&c)==0);ms(3000);assert(!StepperPulse_Position(0));
  sensor_valid=0;ms(1);assert(idle_wheels()&&!StepperPulse_Busy());assert(SystemControl_Apply(&c)==4);
- sensor_valid=1;c.flags=0;assert(SystemControl_Apply(&c)==0);c.flags=1;assert(SystemControl_Apply(&c)==0);
+ sensor_valid=1;c.flags=0;assert(SystemControl_Apply(&c)==0);c.flags=1;assert(SystemControl_Apply(&c)==3);
+ ms(1100);assert(idle_wheels()&&!StepperPulse_Busy());assert(SystemControl_Apply(&c)==3);
+ c.flags=0;assert(SystemControl_Apply(&c)==0);c.flags=1;assert(SystemControl_Apply(&c)==0);
  SystemControl_CommsFault();assert(SystemControl_Apply(&c)==4);c.flags=0;assert(SystemControl_Apply(&c)==0);
  g_motor_control.fault=1;ms(1);assert(SystemControl_Apply(&c)==4);
  SystemControl_Status(out,9,4,3);assert(out[0]==0xB5&&out[19]==0xB6&&out[4]==4&&out[15]==2&&out[16]==1);
