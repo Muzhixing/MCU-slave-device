@@ -41,8 +41,8 @@ HAL_StatusTypeDef Motor_Set(MotorId id, int32_t duty)
   p = &pins[id];
   if (duty > 999) { duty = 999; }
   if (duty < -999) { duty = -999; }
-  /* Right-side motors C/D are mounted with opposite polarity to A/B. */
-  if (id == MOTOR_RF || id == MOTOR_RB) { duty = -duty; }
+  /* Board forward: A/B negative electrical polarity, C/D positive. */
+  if (id == MOTOR_LF || id == MOTOR_LB) { duty = -duty; }
   sign = duty > 0 ? 1 : (duty < 0 ? -1 : 0);
   if (sign && last_sign[id] && sign != last_sign[id] &&
       (running[id] || (uint32_t)(HAL_GetTick() - stopped_at[id]) < 500U)) {
