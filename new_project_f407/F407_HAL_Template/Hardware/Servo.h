@@ -1,7 +1,8 @@
 #ifndef SERVO_H
 #define SERVO_H
 #include "main.h"
-#define SERVO_RESET_TENTHS 900U
+/* Physical forward reference rechecked on 2026-11-23: protocol angle 73 deg. */
+#define SERVO_RESET_TENTHS 730U
 HAL_StatusTypeDef Servo_Init(void);
 void Servo_Hold(void);
 void Servo_Disable(void);

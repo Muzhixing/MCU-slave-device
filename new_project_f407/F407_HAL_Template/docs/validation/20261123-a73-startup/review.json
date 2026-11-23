@@ -1,0 +1,16 @@
+{
+  "source_files_matched": 93,
+  "hex_checksums_and_bin_identity": "PASS",
+  "halted_readback_identity": "PASS",
+  "host_tests": {
+    "platform": "macOS",
+    "run": 197,
+    "passed": 191,
+    "skipped": 6,
+    "failed": 0
+  },
+  "linux_pty_note": "Earlier A75 full suite encountered 6 reopen failures due to retained TIOCEXCL on Linux PTYs; reproduced independently. Live USB serial startup and reopen checks passed.",
+  "final_user_observation": "是，复位后仍然居中",
+  "hardware_scope": "A73 startup and timed B/C registration, disabled at end; camera/model warmup and full A sweep covered by software regression only in this release.",
+  "power_switch_observation": "One operator power switch attempt preserved command count2 and zero flags; no MCU reset signature. ST-Link explicit reset subsequently produced a fresh boot. USB power source not established."
+}

@@ -1,6 +1,8 @@
 # 固件发布文件
 
-最新已烧录版本为 [20261123-all-encoder-filter](20261123-all-encoder-filter/README.md)，适用于STM32F407VET6、HSE8MHz。该目录提供GNU Arm 10.3.1生成的BIN、HEX、匹配ELF/MAP、源码哈希与构建记录。
+当前已烧录版本为 [20261123-a73-startup](20261123-a73-startup/README.md)：A上电回到现场确认的73°，保留四轮滤波15，并与RK3588的自动准备流程配套。
+
+上一四轮验证基线为 [20261123-all-encoder-filter](20261123-all-encoder-filter/README.md)，适用于STM32F407VET6、HSE8MHz。该目录提供GNU Arm 10.3.1生成的BIN、HEX、匹配ELF/MAP、源码哈希与构建记录。
 
 四路编码器输入滤波6→15已在重启后核对；悬空8%速度目标前后各120秒均无故障、全程平滑。范围与证据见 [验收记录](../docs/four-wheel-filter-20261123.md)。
 

@@ -13,8 +13,12 @@ ap = argparse.ArgumentParser()
 ap.add_argument("--source", required=True)
 ap.add_argument("--out", required=True)
 ap.add_argument("--toolchain", required=True, help="Directory containing arm-none-eabi-gcc")
+ap.add_argument("--name", default="f407_all_encoder_filter", help="Artifact stem (letters, digits, underscores and hyphens)")
+ap.add_argument("--baseline", default="785123b41001efa6e673d0bca2a0376d9a7788ff", help="Source baseline commit; recorded, not inferred from a copied tree")
 
 args = ap.parse_args()
+if not re.fullmatch(r"[A-Za-z0-9_-]+", args.name):
+    ap.error("invalid artifact name")
 source, out, tc = Path(args.source).resolve(), Path(args.out).resolve(), Path(args.toolchain).resolve()
 out.mkdir(parents=True, exist_ok=True)
 gcc = str(tc / "arm-none-eabi-gcc")
@@ -114,7 +118,7 @@ for i, file in enumerate(files + [out / "startup.S"]):
     obj = out / (str(i) + "_" + file.stem + ".o")
     run([gcc, *flags, "-c", str(file), "-o", str(obj)])
     objects.append(str(obj))
-elf = out / "f407_all_encoder_filter.elf"
+elf = out / (args.name + ".elf")
 run([gcc, *flags, "-nostartfiles", "--specs=nano.specs", "--specs=nosys.specs", *objects,
      "-T", str(out / "stm32f407ve.ld"), "-Wl,--gc-sections,-Map=" + str(elf.with_suffix(".map")),
      "-Wl,--start-group", "-lc", "-lm", "-lgcc", "-Wl,--end-group", "-o", str(elf)])
@@ -123,7 +127,7 @@ for suffix, fmt in [(".hex", "ihex"), (".bin", "binary")]:
 size = subprocess.check_output([str(tc / "arm-none-eabi-size"), str(elf)], text=True)
 symbols = subprocess.check_output([str(tc / "arm-none-eabi-nm"), "--defined-only", str(elf)], text=True)
 (out / "symbols.txt").write_text(symbols)
-manifest = {"mode": "all_encoder_filter_15_candidate", "hardware_validated": False, "toolchain": version, "baseline": "785123b41001efa6e673d0bca2a0376d9a7788ff",
+manifest = {"mode": args.name + "_candidate", "hardware_validated": False, "toolchain": version, "baseline": args.baseline,
             "size": size, "build_commands": commands, "artifacts": {},
             "source_hashes": {str(p.relative_to(source)): hashlib.sha256(p.read_bytes()).hexdigest()
                               for p in source.rglob("*") if p.is_file() and p.suffix in (".c", ".h", ".inc", ".s", ".uvprojx")},

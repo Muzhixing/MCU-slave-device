@@ -1,0 +1,9 @@
+{
+  "date": "2026-11-23",
+  "initial_75_observation": "不在正中,稍微差了几度,刚才看错了；偏左",
+  "bounded_change": "A75 to A73, B0 C0, disabled after movement",
+  "user_73_observation": "已经居中",
+  "structural_zero_command": 73,
+  "independent_angular_measurement": false,
+  "user_after_final_firmware_reset": "是，复位后仍然居中"
+}

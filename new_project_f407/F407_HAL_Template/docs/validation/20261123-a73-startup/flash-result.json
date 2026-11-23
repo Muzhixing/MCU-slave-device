@@ -1,0 +1,51 @@
+{
+  "success": true,
+  "old_full_flash_sha256": "327e7190c253c812a03d43cc4f075beaeb4fbb4e869ce79e0709ca6df9247b77",
+  "new_bin_sha256": "a71097d52748721a7e3132516278cfeffbf3f5e5388ccb958c66b6f1a08b1e41",
+  "readback_identical": true,
+  "serial_tx": 0,
+  "boot_pose": [
+    73,
+    0,
+    0
+  ],
+  "encoder_filter_registers": "0xf1f1",
+  "wheel_pwm": [
+    0,
+    0,
+    0,
+    0
+  ],
+  "servo_pulse_us": 1311,
+  "last_telemetry": {
+    "hex": "B5 01 00 00 00 28 00 00 00 00 00 00 FF FF 49 00 00 00 60 B6",
+    "version": 1,
+    "command_count_mod256": 0,
+    "result": 0,
+    "result_name": "accepted",
+    "state": 0,
+    "state_name": "disabled",
+    "flags": 40,
+    "enabled": false,
+    "lift_zero_confirmed": false,
+    "slide_zero_confirmed": false,
+    "angle_valid": true,
+    "distance_valid": false,
+    "heading_reference_established": true,
+    "unknown_flag_bits": 0,
+    "lift_position_tenths_mm": 0,
+    "slide_position_tenths_mm": 0,
+    "lift_position_mm": 0.0,
+    "slide_position_mm": 0.0,
+    "yaw_raw_tenths_deg": 0,
+    "yaw_deg": 0.0,
+    "ultrasound_raw_mm": 65535,
+    "ultrasound_mm": null,
+    "servo_software_deg": 73,
+    "system_fault": 0,
+    "system_fault_name": "none",
+    "motor_fault": 0,
+    "motor_fault_name": "none",
+    "uart_error_count_mod256": 0
+  }
+}

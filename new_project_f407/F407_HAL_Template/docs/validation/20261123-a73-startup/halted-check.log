@@ -1,0 +1,25 @@
+Open On-Chip Debugger 0.11.0
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+Info : The selected transport took over low-level target control. The results might differ compared to plain JTAG/SWD
+Info : clock speed 1000 kHz
+Info : STLINK V2J37S7 (API v2) VID:PID 0483:3748
+Info : Target voltage: 3.216987
+Info : stm32f4x.cpu: hardware has 6 breakpoints, 4 watchpoints
+Info : gdb port disabled
+running
+CHIP_ID
+269444115
+CPU_ID
+1091551809
+FLASH_SIZE_KIB
+59390
+target halted due to debug-request, current mode: Thread 
+xPSR: 0x81000000 pc: 0x080002ae msp: 0x2001fff8
+ENCODER_FILTER 0x40000018 61937
+ENCODER_FILTER 0x40000418 61937
+ENCODER_FILTER 0x40000818 61937
+ENCODER_FILTER 0x40010418 61937
+SERVO_CCR1 1311
+shutdown command invoked
