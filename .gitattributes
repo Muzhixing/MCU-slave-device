@@ -2,3 +2,6 @@
 new_project_f407/F407_HAL_Template/Drivers/** -text
 new_project_f407/F407_HAL_Template/docs/hardware/** -text
 *.hex -text
+# Keep archived firmware and deployment evidence hashes stable across platforms.
+new_project_f407/F407_HAL_Template/firmware/20261123-all-encoder-filter/** -text
+new_project_f407/F407_HAL_Template/docs/validation/20261123-all-encoder-filter/** -text

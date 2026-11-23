@@ -1,0 +1,56 @@
+{
+  "samples": 1372,
+  "pwm_nonzero_records": 0,
+  "operator_order": [
+    "left_front",
+    "right_front",
+    "right_rear",
+    "left_rear"
+  ],
+  "channels": {
+    "D": {
+      "physical_position": "left_front",
+      "active_window_s": [
+        10.826,
+        18.003
+      ],
+      "net_counts": 12179,
+      "positive_intervals": 182,
+      "negative_intervals": 0,
+      "large_jump_intervals": 0
+    },
+    "B": {
+      "physical_position": "right_front",
+      "active_window_s": [
+        18.363,
+        27.103
+      ],
+      "net_counts": -13840,
+      "positive_intervals": 1,
+      "negative_intervals": 220,
+      "large_jump_intervals": 0
+    },
+    "A": {
+      "physical_position": "right_rear",
+      "active_window_s": [
+        37.848,
+        44.865
+      ],
+      "net_counts": -11208,
+      "positive_intervals": 0,
+      "negative_intervals": 181,
+      "large_jump_intervals": 0
+    },
+    "C": {
+      "physical_position": "left_rear",
+      "active_window_s": [
+        45.306,
+        52.763
+      ],
+      "net_counts": 15250,
+      "positive_intervals": 189,
+      "negative_intervals": 1,
+      "large_jump_intervals": 2
+    }
+  }
+}

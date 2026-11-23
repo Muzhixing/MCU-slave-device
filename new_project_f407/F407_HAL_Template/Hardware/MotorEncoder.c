@@ -39,7 +39,9 @@ HAL_StatusTypeDef MotorEncoder_Init(void)
   cfg.IC2Polarity = TIM_ICPOLARITY_RISING;
   cfg.IC1Selection = cfg.IC2Selection = TIM_ICSELECTION_DIRECTTI;
   cfg.IC1Prescaler = cfg.IC2Prescaler = TIM_ICPSC_DIV1;
-  cfg.IC1Filter = cfg.IC2Filter = 6;
+  /* Apply the input-glitch filter verified on B/TIM3 to all four encoders.
+   * Filter changes only; preserve polarity, scaling and fault protection. */
+  cfg.IC1Filter = cfg.IC2Filter = 15U;
   for (i=0; i<4; ++i) {
     enc[i].Instance = timers[i];
     enc[i].Init.Prescaler = 0;

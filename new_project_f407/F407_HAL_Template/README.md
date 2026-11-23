@@ -1,5 +1,7 @@
 # F407 HAL 整合固件
 
+当前已验证发布：[2026-11-23 四轮输入滤波修正](docs/four-wheel-filter-20261123.md)。四路滤波6→15，其余控制逻辑沿用基线；已完成烧录读回和悬空低速正反向测试。对应固件见 [firmware](firmware/README.md)。
+
 ## 打开与编译
 
 打开 `MDK-ARM/F407_HAL_Template.uvprojx`，目标 `F407_HAL_Template`。
@@ -8,6 +10,8 @@
 HSE=8MHz，PLL M=8/N=336/P=2/Q=7，SYSCLK=168MHz，APB1=42MHz，APB2=84MHz。Flash为0x08000000起512KB，普通SRAM为0x20000000起128KB；未使用CCM。
 
 Keil Rebuild后生成 `MDK-ARM/Objects/F407_HAL_Template.hex`。ST-Link选择SWD，并使用覆盖0x08000000的STM32F4xx 512KB Flash算法。出现“No Algorithm found”应检查Flash Download算法，不应修改运行时PLL代码解决。
+
+2026-11-23发布使用 GNU Arm 10.3.1，构建命令和工具链信息见 [发布说明](firmware/20261123-all-encoder-filter/README.md)。`tools/build.py` 从Keil工程读取C源文件列表和中断向量，生成GNU启动文件及链接脚本；只构建，不烧录。该入口针对当前纯C工程，不包含C++构造器初始化支持。
 
 ## 目录
 
@@ -19,7 +23,8 @@ Keil Rebuild后生成 `MDK-ARM/Objects/F407_HAL_Template.hex`。ST-Link选择SWD
 |MDK-ARM|Keil工程、ST-Link配置和启动汇编|
 |tests|主机回归测试及硬件桩|
 |docs|接线、协议、历史测试及原始硬件资料|
-|firmware|本次构建发布的HEX、校验及构建说明|
+|firmware|按版本保存的已验证固件、调试符号、校验及历史HEX|
+|tools|GNU Arm构建入口，不执行烧录|
 
 `python tests/run.py` 运行GCC主机测试（需要Python3和PATH中的gcc），测试直接复制当前生产模块到临时目录编译，测试结束自动清理临时输出。
 

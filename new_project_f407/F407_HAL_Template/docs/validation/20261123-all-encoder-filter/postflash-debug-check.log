@@ -1,0 +1,22 @@
+Open On-Chip Debugger 0.11.0
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+Info : The selected transport took over low-level target control. The results might differ compared to plain JTAG/SWD
+Info : clock speed 1000 kHz
+Info : STLINK V2J37S7 (API v2) VID:PID 0483:3748
+Info : Target voltage: 3.216987
+Info : stm32f4x.cpu: hardware has 6 breakpoints, 4 watchpoints
+Info : gdb port disabled
+target halted due to debug-request, current mode: Thread 
+xPSR: 0x81000000 pc: 0x080002ae msp: 0x2001fff8
+DEBUG_CR_BEFORE 7
+DEBUG_CR_AFTER 7
+HALTED_FILTER 0x40000018 61937
+HALTED_FILTER 0x40000418 61937
+HALTED_FILTER 0x40000818 61937
+HALTED_FILTER 0x40010418 61937
+all_encoder_filter_20261123/flash_run/postflash_debug_check.cfg:47: Error: running_filter_mismatch
+in procedure 'script' 
+at file "embedded:startup.tcl", line 26
+at file "all_encoder_filter_20261123/flash_run/postflash_debug_check.cfg", line 47

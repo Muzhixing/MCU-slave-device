@@ -1,0 +1,38 @@
+{
+  "review_date": "2026-11-23",
+  "source_files_matched": 93,
+  "hex_checksums_and_bin_identity": "PASS",
+  "halted_readback_identity": "PASS",
+  "initial_stack": "0x20020000",
+  "reset_vector": "0x800468d",
+  "build_script_sha256": "2d803fb4bd56257658436d4227bbeffe2d1814c65c1328fd73733c168a4385b2",
+  "endurance_events_recount": [
+    {
+      "direction": "forward",
+      "frames": 491,
+      "states": {
+        "disabled": 11,
+        "chassis_moving": 480
+      },
+      "errors": 0,
+      "final_state": "disabled"
+    },
+    {
+      "direction": "backward",
+      "frames": 490,
+      "states": {
+        "disabled": 10,
+        "chassis_moving": 480
+      },
+      "errors": 0,
+      "final_state": "disabled"
+    }
+  ],
+  "verification_note": "Review of saved deployment evidence; no device actions during repository update.",
+  "host_regression_commands": {
+    "python3 tests/run.py": "PASS",
+    "SANITIZE=1 python3 tests/run.py": "PASS"
+  },
+  "host_regression_scope": "Protocol/state-machine, heading recovery, actual USART2 heading-parser driver; does not emulate encoder hardware.",
+  "cross_compile_review": "Reviewed saved GNU Arm 10.3.1 build log and matched all 93 input hashes plus deployed output; no new cross-build in this repository review."
+}

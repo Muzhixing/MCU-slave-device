@@ -2,10 +2,10 @@
 
 当前唯一维护工程：**[F407_HAL_Template](new_project_f407/F407_HAL_Template/README.md)**。
 
-STM32F407VET6 · Keil 5 / ARMCC 5 · STM32 HAL · ST-Link/SWD。
+STM32F407VET6 · Keil 5 / ARMCC 5 或 GNU Arm 10.3.1 · STM32 HAL · ST-Link/SWD。
 整合四轮速度PID、HWT101航向闭环、180°舵机、超声波、升降与横杆脉冲步进轴。水泵不参与运行，仅保留关断初始化。
 
-用户于2026-10-26确认当前二进制数据包实机测试成功。本次整理以此为基线；清理后的编译与主机测试见工程内验证记录，不能替代重新烧录验证。
+最新已烧录版本为 **2026-11-23 四轮编码器滤波修正**：四路输入滤波从6调整为15，悬空8%目标前进、后退各120秒均无故障，用户确认全程平滑。源码、已烧录BIN/HEX、匹配的ELF/MAP及验证记录一并归档；详见 [发布文件](new_project_f407/F407_HAL_Template/firmware/README.md) 与 [四轮验收](new_project_f407/F407_HAL_Template/docs/four-wheel-filter-20261123.md)。
 
 - [接线及资源分配](new_project_f407/F407_HAL_Template/docs/wiring.md)
 - [串口二进制协议与测试包](new_project_f407/F407_HAL_Template/docs/protocol.md)

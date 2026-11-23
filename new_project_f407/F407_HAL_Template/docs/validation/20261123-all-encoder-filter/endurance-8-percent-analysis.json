@@ -1,0 +1,151 @@
+{
+  "scope": "Suspended chassis, original UART protocol, no running SWD samples; per-wheel smoothness requires user observation",
+  "trials": [
+    {
+      "direction": "forward",
+      "speed_field": 8,
+      "duration_between_motion_disable_s": 120.00092132600003,
+      "serial_tx_count": 2,
+      "serial_tx_hex": [
+        "b3 08 00 00 5a 00 00 00 01 b4",
+        "b3 00 00 00 5a 00 00 00 00 b4"
+      ],
+      "telemetry_frames": 491,
+      "driving_frames": 480,
+      "system_faults": [
+        0
+      ],
+      "motor_faults": [
+        0
+      ],
+      "uart_error_counts": [
+        0
+      ],
+      "command_counts": [
+        6,
+        7,
+        8
+      ],
+      "arm_poses": [
+        [
+          90,
+          0.0,
+          0.0
+        ]
+      ],
+      "yaw_range": [
+        0.0,
+        0.0
+      ],
+      "telemetry_max_gap_ms": 257.12569800089113,
+      "telemetry_median_gap_ms": 246.0787789996175,
+      "final_state": {
+        "hex": "B5 01 08 00 00 2E 00 00 00 00 00 00 FF FF 5A 00 00 00 7D B6",
+        "version": 1,
+        "command_count_mod256": 8,
+        "result": 0,
+        "result_name": "accepted",
+        "state": 0,
+        "state_name": "disabled",
+        "flags": 46,
+        "enabled": false,
+        "lift_zero_confirmed": true,
+        "slide_zero_confirmed": true,
+        "angle_valid": true,
+        "distance_valid": false,
+        "heading_reference_established": true,
+        "unknown_flag_bits": 0,
+        "lift_position_tenths_mm": 0,
+        "slide_position_tenths_mm": 0,
+        "lift_position_mm": 0.0,
+        "slide_position_mm": 0.0,
+        "yaw_raw_tenths_deg": 0,
+        "yaw_deg": 0.0,
+        "ultrasound_raw_mm": 65535,
+        "ultrasound_mm": null,
+        "servo_software_deg": 90,
+        "system_fault": 0,
+        "system_fault_name": "none",
+        "motor_fault": 0,
+        "motor_fault_name": "none",
+        "uart_error_count_mod256": 0
+      },
+      "error": null,
+      "stop_error": null,
+      "operator_stopped": false
+    },
+    {
+      "direction": "backward",
+      "speed_field": 8,
+      "duration_between_motion_disable_s": 120.00319142999979,
+      "serial_tx_count": 2,
+      "serial_tx_hex": [
+        "b3 f8 00 00 5a 00 00 00 01 b4",
+        "b3 00 00 00 5a 00 00 00 00 b4"
+      ],
+      "telemetry_frames": 490,
+      "driving_frames": 480,
+      "system_faults": [
+        0
+      ],
+      "motor_faults": [
+        0
+      ],
+      "uart_error_counts": [
+        0
+      ],
+      "command_counts": [
+        8,
+        9,
+        10
+      ],
+      "arm_poses": [
+        [
+          90,
+          0.0,
+          0.0
+        ]
+      ],
+      "yaw_range": [
+        0.0,
+        0.0
+      ],
+      "telemetry_max_gap_ms": 257.22492600107216,
+      "telemetry_median_gap_ms": 246.04195699976117,
+      "final_state": {
+        "hex": "B5 01 0A 00 00 2E 00 00 00 00 00 00 FF FF 5A 00 00 00 7F B6",
+        "version": 1,
+        "command_count_mod256": 10,
+        "result": 0,
+        "result_name": "accepted",
+        "state": 0,
+        "state_name": "disabled",
+        "flags": 46,
+        "enabled": false,
+        "lift_zero_confirmed": true,
+        "slide_zero_confirmed": true,
+        "angle_valid": true,
+        "distance_valid": false,
+        "heading_reference_established": true,
+        "unknown_flag_bits": 0,
+        "lift_position_tenths_mm": 0,
+        "slide_position_tenths_mm": 0,
+        "lift_position_mm": 0.0,
+        "slide_position_mm": 0.0,
+        "yaw_raw_tenths_deg": 0,
+        "yaw_deg": 0.0,
+        "ultrasound_raw_mm": 65535,
+        "ultrasound_mm": null,
+        "servo_software_deg": 90,
+        "system_fault": 0,
+        "system_fault_name": "none",
+        "motor_fault": 0,
+        "motor_fault_name": "none",
+        "uart_error_count_mod256": 0
+      },
+      "error": null,
+      "stop_error": null,
+      "operator_stopped": false
+    }
+  ]
+}

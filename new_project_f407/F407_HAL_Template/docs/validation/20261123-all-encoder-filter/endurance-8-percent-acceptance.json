@@ -1,0 +1,13 @@
+{
+  "date": "2026-11-23",
+  "source_baseline": "785123b41001efa6e673d0bca2a0376d9a7788ff",
+  "all_encoder_filter": 15,
+  "firmware_bin_sha256": "c55dd404078189c1cad35c5ef671315577f26c2d80e8330970c08febff9d4e00",
+  "test_runner_sha256": "92de882d39cebd3fed00ed37dd1299d304e1ac45d549e97486e2f525521f291f",
+  "user_observation_forward_30s": "四轮持续平滑转动",
+  "user_observation_full_trials": "两个方向全程平滑，没有恶化",
+  "expected_failure_window_comparison": "Both 120-second runs exceeded the previous approximately 85-second reverse-feedback failure; no such fault occurred during these runs.",
+  "scope": "Suspended chassis, target field 8%; 120 seconds per direction; not loaded or thermal validation",
+  "final_state": "disabled; command count 10; faults 0; A90 B0 C0",
+  "acceptance": "PASS within suspended 8%, 120 seconds per direction"
+}
